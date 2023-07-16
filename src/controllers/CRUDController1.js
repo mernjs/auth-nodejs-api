@@ -3,7 +3,7 @@ const User = require('../models/User');
 const fs = require('fs')
 const path = require('path')
 
-const profileImageBasePath = 'http://localhost:8080/static/profile_images'
+const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
 
 function getImageExtension(base64Data) {
 	const dataUrlRegex = /^data:image\/(\w+);base64,/;
