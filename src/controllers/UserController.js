@@ -1,49 +1,14 @@
 const Utilities = require('../Utilities');
 const User = require('../models/User');
-const fs = require('fs')
-const path = require('path')
-
 const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
 
-function getImageExtension(base64Data) {
-	const dataUrlRegex = /^data:image\/(\w+);base64,/;
-	const match = base64Data.match(dataUrlRegex);
-	if (match && match[1]) {
-		return match[1];
-	}
-	return null;
-}
-
-const uploadImage = async (base64image) => {
-	return new Promise((resolve, reject) => {
-		var matches = base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
-			response = {};
-		if (matches.length !== 3) {
-			reject('Invalid input string')
-			return;
-		}
-		response.type = matches[1];
-		response.data = new Buffer(matches[2], 'base64');
-		let decodedImg = response;
-		let imageBuffer = decodedImg.data;
-		let fileName = `profile_pic_${Math.floor(Date.now() / 1000)}.${getImageExtension(base64image)}`;
-		try {
-			const folderPath = path.resolve("public", "profile_images", fileName);
-			fs.writeFileSync(folderPath, imageBuffer, 'utf8');
-			resolve(fileName)
-		} catch (e) {
-			reject(e);
-		}
-	})
-}
-
-class CrudController {
+class UserController {
 
 	async addUser(req, res) {
 		try {
 			const doesExist = await User.findOne({ email: req.body.email })
 			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
-			const profilePic = await uploadImage(req.body.profilePic)
+			const profilePic = await Utilities.uploadImage(req.body.profilePic)
 			const user = new User({ ...req.body, profilePic })
 			const savedUser = await user.save()
 			let data = {
@@ -140,4 +105,4 @@ class CrudController {
 
 }
 
-module.exports = new CrudController(); 
+module.exports = new UserController(); 

@@ -4,7 +4,8 @@ const Route = express.Router();
 
 const AuthController = require('./controllers/AuthController');
 const CrudController = require('./controllers/CrudController')
-const CRUDController1 = require('./controllers/CRUDController1')
+const UserController = require('./controllers/UserController')
+const GalleryController = require('./controllers/GalleryController')
 /**
  * APIs V1 Routes
  */
@@ -41,23 +42,30 @@ Route.route('/api/v1/users/:userId?')
 	.all(Utilities.send405);
 
 Route.route('/api/v1/user/add')
-	.post(CRUDController1.addUser)
+	.post(UserController.addUser)
 	.all(Utilities.send405);
 
 Route.route('/api/v1/user/edit/:userId')
-	.put(CRUDController1.updateUser)
+	.put(UserController.updateUser)
 	.all(Utilities.send405);
 
 Route.route('/api/v1/user/delete/:userId')
-	.delete(CRUDController1.deleteUser)
+	.delete(UserController.deleteUser)
 	.all(Utilities.send405);
 
 Route.route('/api/v1/user/get/:userId')
-	.get(CRUDController1.getUser)
+	.get(UserController.getUser)
 	.all(Utilities.send405);
 
 Route.route('/api/v1/user/get-all')
-	.get(CRUDController1.getAllUsers)
+	.get(UserController.getAllUsers)
 	.all(Utilities.send405);
+
+Route.route('/api/v1/image/gallery/:imageId?')
+	.get(GalleryController.getImages)
+	.post(GalleryController.addImage)
+	.delete(GalleryController.deleteImage)
+	.all(Utilities.send405);
+
 
 module.exports = Route;
