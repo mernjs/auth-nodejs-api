@@ -12,7 +12,7 @@ coverage
 # next.js
 .next/
 out/
-
+profile_images
 # production
 build
 production

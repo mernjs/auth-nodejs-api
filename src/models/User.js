@@ -27,6 +27,10 @@ const UserSchema = new Schema(
 			type: [Schema.Types.Mixed],
 			required: false,
 		},
+		profilePic: {
+			type: String,
+			required: false,
+		}
 	},
 	{ timestamps: { currentTime: () => Date.now() } },
 );
