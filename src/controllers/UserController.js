@@ -8,7 +8,7 @@ class UserController {
 		try {
 			const doesExist = await User.findOne({ email: req.body.email })
 			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
-			const profilePic = await Utilities.uploadImage(req.body.profilePic)
+			const profilePic = await Utilities.uploadImage(req.body.profilePic, 'profile_images')
 			const user = new User({ ...req.body, profilePic })
 			const savedUser = await user.save()
 			let data = {

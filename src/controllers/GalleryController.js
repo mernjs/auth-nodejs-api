@@ -6,7 +6,7 @@ class GalleryController {
 
 	async addImage(req, res) {
 		try {
-			const image = await Utilities.uploadImage(req.body.image)
+			const image = await Utilities.uploadImage(req.body.image, 'gallery')
 			const response = new Gallery({ image })
 			const savedImage = await response.save()
 			let data = {
