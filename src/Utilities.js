@@ -114,7 +114,7 @@ function getImageExtension(base64Data) {
 	return null;
 }
 
-module.exports.uploadImage = async (base64image, folderPath) => {
+module.exports.uploadImage = async (base64image, folder) => {
 	return new Promise((resolve, reject) => {
 		var matches = base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
 			response = {};
@@ -128,7 +128,7 @@ module.exports.uploadImage = async (base64image, folderPath) => {
 		let imageBuffer = decodedImg.data;
 		let fileName = `gallery_${Math.floor(Date.now() / 1000)}.${getImageExtension(base64image)}`;
 		try {
-			const folderPath = path.resolve("public", folderPath, fileName);
+			const folderPath = path.resolve("public", folder, fileName);
 			fs.writeFileSync(folderPath, imageBuffer, 'utf8');
 			resolve(fileName)
 		} catch (e) {
