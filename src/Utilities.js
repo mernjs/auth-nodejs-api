@@ -115,6 +115,7 @@ function getImageExtension(base64Data) {
 }
 
 module.exports.uploadImage = async (base64image, folder) => {
+
 	return new Promise((resolve, reject) => {
 		var matches = base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
 			response = {};
@@ -135,6 +136,7 @@ module.exports.uploadImage = async (base64image, folder) => {
 			reject(e);
 		}
 	})
+
 }
 
 module.exports.apiResponse = apiResponse;

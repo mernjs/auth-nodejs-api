@@ -17,7 +17,8 @@ class UserController {
 				email: savedUser.email,
 				skills: savedUser.skills,
 				gender: savedUser.gender,
-				profilePic: `${profileImageBasePath}/${savedUser.profilePic}`
+				createdAt: user.createdAt,
+				profilePic: savedUser.profilePic ? `${profileImageBasePath}/${savedUser.profilePic}` : ""
 			}
 			Utilities.apiResponse(res, 200, 'User Created Successfully!', data)
 		} catch (error) {
@@ -34,7 +35,8 @@ class UserController {
 				email: user.email,
 				skills: user.skills,
 				gender: user.gender,
-				profilePic: `${profileImageBasePath}/${user.profilePic}`
+				createdAt: user.createdAt,
+				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
 			}
 			Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
 		} catch (error) {
@@ -57,7 +59,8 @@ class UserController {
 				email: user.email,
 				skills: user.skills,
 				gender: user.gender,
-				profilePic: `${profileImageBasePath}/${user.profilePic}`
+				createdAt: user.createdAt,
+				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
 			}))
 			const data = {
 				users: updatedUsers,
@@ -86,7 +89,8 @@ class UserController {
 				email: user.email,
 				skills: user.skills,
 				gender: user.gender,
-				profilePic: `${profileImageBasePath}/${user.profilePic}`
+				createdAt: user.createdAt,
+				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
 			}
 			Utilities.apiResponse(res, 200, 'User Has Been Updated Successfully', data)
 		} catch (error) {
