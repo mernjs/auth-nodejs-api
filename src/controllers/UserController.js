@@ -2,6 +2,21 @@ const Utilities = require('../Utilities');
 const User = require('../models/User');
 const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
 
+// Function to handle the file input change event
+function handleFileInputChange(event) {
+	const file = event.target.files[0]; // Get the selected file
+	const maxSizeInBytes = 5 * 1024 * 1024; // Maximum file size in bytes (e.g., 5MB)
+
+	// Check if the file size exceeds the limit
+	if (file.size > maxSizeInBytes) {
+		alert('File size exceeds the limit. Please choose a smaller file.');
+		event.target.value = ''; // Reset the file input value to clear the selection
+	} else {
+		// The file size is within the limit, you can proceed with uploading or further processing
+		// Your code here...
+	}
+}
+
 class UserController {
 
 	async addUser(req, res) {
@@ -81,7 +96,13 @@ class UserController {
 		try {
 			const doesExist = await User.findOne({ email: req.body.email })
 			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
-			const user = await User.findOneAndUpdate({ _id: req.params.userId }, req.body)
+			let profilePic = ""
+			if (req.body.profilePic) {
+				profilePic = await Utilities.uploadImage(req.body.profilePic, 'profile_images')
+			}
+			let updateddata = { ...req.body }
+			if (profilePic !== "") updateddata = { ...updateddata, profilePic }
+			const user = await User.findOneAndUpdate({ _id: req.params.userId }, updateddata)
 			if (!user) return Utilities.apiResponse(res, 422, 'User Not Found')
 			let data = {
 				id: user._id,
