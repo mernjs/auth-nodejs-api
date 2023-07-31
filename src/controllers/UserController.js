@@ -21,7 +21,7 @@ class UserController {
 		if (!req.body.gender) {
 			errors.gender = "Gender is required."
 		}
-		if (!req.body.skills || req.body.skills.lenght === 0) {
+		if (!req.body.skills || req.body.skills.length === 0) {
 			errors.skills = "Skills is required."
 		}
 		if (!req.body.profilePic) {
@@ -117,7 +117,7 @@ class UserController {
 			if (!req.body.gender) {
 				errors.gender = "Gender is required."
 			}
-			if (!req.body.skills || req.body.skills.lenght === 0) {
+			if (!req.body.skills || req.body.skills.length === 0) {
 				errors.skills = "Skills is required."
 			}
 
