@@ -1,25 +1,35 @@
+const _ = require("lodash")
 const Utilities = require('../Utilities');
 const User = require('../models/User');
 const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
 
-// Function to handle the file input change event
-function handleFileInputChange(event) {
-	const file = event.target.files[0]; // Get the selected file
-	const maxSizeInBytes = 5 * 1024 * 1024; // Maximum file size in bytes (e.g., 5MB)
-
-	// Check if the file size exceeds the limit
-	if (file.size > maxSizeInBytes) {
-		alert('File size exceeds the limit. Please choose a smaller file.');
-		event.target.value = ''; // Reset the file input value to clear the selection
-	} else {
-		// The file size is within the limit, you can proceed with uploading or further processing
-		// Your code here...
-	}
-}
-
 class UserController {
 
 	async addUser(req, res) {
+		let errors = {}
+		if (!req.body.name) {
+			errors.name = "Name is required."
+		}
+		if (!req.body.email) {
+			errors.email = "Email is required."
+		}
+		if (!req.body.password) {
+			errors.password = "Password is required."
+		}
+		if (!req.body.gender) {
+			errors.gender = "Gender is required."
+		}
+		if (!req.body.skills || req.body.skills.lenght === 0) {
+			errors.skills = "Skills is required."
+		}
+		if (!req.body.profilePic) {
+			errors.profilePic = "Profile image is required."
+		}
+
+		if (!_.isEmpty(errors)) {
+			return Utilities.apiResponse(res, 422, "Validation Errors", errors)
+		}
+
 		try {
 			const doesExist = await User.findOne({ email: req.body.email })
 			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
@@ -43,6 +53,7 @@ class UserController {
 
 	async getUser(req, res) {
 		try {
+			if (!req.params.userId) return Utilities.apiResponse(res, 422, "User id is required.")
 			const user = await User.findOne({ _id: req.params.userId })
 			let data = {
 				id: user._id,
@@ -63,8 +74,8 @@ class UserController {
 		try {
 			const options = {
 				page: req.query?.page || 1,
-				limit: req.query?.limit || 10,
-				sort: { createdAt: -1 }
+				limit: req.query?.limit || 1000,
+				// sort: { createdAt: -1 }
 			};
 			const users = await User.paginate({}, options)
 			let updatedUsers = []
@@ -94,6 +105,24 @@ class UserController {
 
 	async updateUser(req, res) {
 		try {
+			let errors = {}
+			if (!req.body.name) {
+				errors.name = "Name is required."
+			}
+			if (!req.body.email) {
+				errors.email = "Email is required."
+			}
+			if (!req.body.gender) {
+				errors.gender = "Gender is required."
+			}
+			if (!req.body.skills || req.body.skills.lenght === 0) {
+				errors.skills = "Skills is required."
+			}
+
+			if (!_.isEmpty(errors)) {
+				return Utilities.apiResponse(res, 422, "Validation Errors", errors)
+			}
+
 			const doesExist = await User.findOne({ email: req.body.email })
 			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
 			let profilePic = ""
@@ -121,6 +150,7 @@ class UserController {
 
 	async deleteUser(req, res) {
 		try {
+			if (!req.params.userId) return Utilities.apiResponse(res, 422, "User id is required.")
 			await User.find({ _id: req.params.userId }).remove().exec();
 			Utilities.apiResponse(res, 200, 'User Deleted Successfully')
 		} catch (error) {
