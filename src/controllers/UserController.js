@@ -1,4 +1,6 @@
 const _ = require("lodash")
+const fs = require('fs')
+const path = require('path')
 const Utilities = require('../Utilities');
 const User = require('../models/User');
 const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
@@ -150,8 +152,15 @@ class UserController {
 
 	async deleteUser(req, res) {
 		try {
-			if (!req.params.userId) return Utilities.apiResponse(res, 422, "User id is required.")
+			if (!req.params.userId) return Utilities.apiResponse(res, 422, "User ID is required.")
+			if (!req.params.userId.match(/^[0-9a-fA-F]{24}$/)) return Utilities.apiResponse(res, 422, "Invalid user id.")
+			const user = await User.findOne({ _id: req.params.userId })
+			if (!user) return Utilities.apiResponse(res, 404, "User not found.")
 			await User.find({ _id: req.params.userId }).remove().exec();
+			if (user.profilePic) {
+				const basePath = path.join(__dirname, '..', '..', 'public', 'profile_images', user.profilePic)
+				fs.unlinkSync(basePath);
+			}
 			Utilities.apiResponse(res, 200, 'User Deleted Successfully')
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
