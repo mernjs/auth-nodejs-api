@@ -5,6 +5,24 @@ const Utilities = require('../Utilities');
 const User = require('../models/User');
 const profileImageBasePath = `${process.env.DOMAIN}/static/profile_images`
 
+const transfromData = (data) => {
+	let newData = {
+		id: data._id,
+		name: data.name,
+		email: data.email,
+		skills: data.skills,
+		gender: data.gender,
+		createdAt: data.createdAt,
+		designation: data.designation,
+		twitter: data.twitter,
+		instagram: data.instagram,
+		facebook: data.facebook,
+		linkedin: data.linkedin,
+		description: data.description,
+		profilePic: data.profilePic ? `${profileImageBasePath}/${data.profilePic}` : ""
+	}
+	return newData
+}
 class UserController {
 
 	async addUser(req, res) {
@@ -38,15 +56,7 @@ class UserController {
 			const profilePic = await Utilities.uploadImage(req.body.profilePic, 'profile_images')
 			const user = new User({ ...req.body, profilePic })
 			const savedUser = await user.save()
-			let data = {
-				id: savedUser._id,
-				name: savedUser.name,
-				email: savedUser.email,
-				skills: savedUser.skills,
-				gender: savedUser.gender,
-				createdAt: user.createdAt,
-				profilePic: savedUser.profilePic ? `${profileImageBasePath}/${savedUser.profilePic}` : ""
-			}
+			const data = transfromData(savedUser)
 			Utilities.apiResponse(res, 200, 'User Created Successfully!', data)
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
@@ -57,15 +67,7 @@ class UserController {
 		try {
 			if (!req.params.userId) return Utilities.apiResponse(res, 422, "User id is required.")
 			const user = await User.findOne({ _id: req.params.userId })
-			let data = {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-				skills: user.skills,
-				gender: user.gender,
-				createdAt: user.createdAt,
-				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
-			}
+			const data = transfromData(user)
 			Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
@@ -81,15 +83,7 @@ class UserController {
 			};
 			const users = await User.paginate({}, options)
 			let updatedUsers = []
-			users.docs.map(user => updatedUsers.push({
-				id: user._id,
-				name: user.name,
-				email: user.email,
-				skills: user.skills,
-				gender: user.gender,
-				createdAt: user.createdAt,
-				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
-			}))
+			users.docs.map(user => updatedUsers.push(transfromData(user)))
 			const data = {
 				users: updatedUsers,
 				pagination: {
@@ -135,16 +129,7 @@ class UserController {
 			if (profilePic !== "") updateddata = { ...updateddata, profilePic }
 			const user = await User.findOneAndUpdate({ _id: req.params.userId }, updateddata)
 			if (!user) return Utilities.apiResponse(res, 422, 'User Not Found')
-			let data = {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-				skills: user.skills,
-				gender: user.gender,
-				createdAt: user.createdAt,
-				profilePic: user.profilePic ? `${profileImageBasePath}/${user.profilePic}` : ""
-			}
-			Utilities.apiResponse(res, 200, 'User Has Been Updated Successfully', data)
+			Utilities.apiResponse(res, 200, 'User Has Been Updated Successfully')
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
 		}

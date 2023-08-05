@@ -22,14 +22,47 @@ const UserSchema = new Schema(
 		gender: {
 			type: String,
 			required: false,
+			default: null
 		},
 		skills: {
 			type: [Schema.Types.Mixed],
 			required: false,
+			default: null
 		},
 		profilePic: {
 			type: String,
 			required: false,
+			default: null
+		},
+		designation: {
+			type: String,
+			required: false,
+			default: null
+		},
+		twitter: {
+			type: String,
+			required: false,
+			default: null
+		},
+		instagram: {
+			type: String,
+			required: false,
+			default: null
+		},
+		facebook: {
+			type: String,
+			required: false,
+			default: null
+		},
+		linkedin: {
+			type: String,
+			required: false,
+			default: null
+		},
+		description: {
+			type: String,
+			required: false,
+			default: null
 		}
 	},
 	{ timestamps: { currentTime: () => Date.now() } },
