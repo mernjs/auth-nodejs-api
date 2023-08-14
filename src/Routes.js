@@ -6,6 +6,7 @@ const AuthController = require('./controllers/AuthController');
 const CrudController = require('./controllers/CrudController')
 const UserController = require('./controllers/UserController')
 const GalleryController = require('./controllers/GalleryController')
+const DynamoDBCrudController = require('./controllers/DynamoDBCrudController')
 /**
  * APIs V1 Routes
  */
@@ -67,5 +68,11 @@ Route.route('/api/v1/image/gallery/:imageId?')
 	.delete(GalleryController.deleteImage)
 	.all(Utilities.send405);
 
+Route.route('/api/v1/dynamodb/curd/:userId?')
+	.post(DynamoDBCrudController.create)
+	.get(DynamoDBCrudController.read)
+	.put(DynamoDBCrudController.update)
+	.delete(DynamoDBCrudController.delete)
+	.all(Utilities.send405);
 
 module.exports = Route;
