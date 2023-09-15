@@ -1,6 +1,27 @@
 const Utilities = require('../Utilities');
 const User = require('../models/User');
 
+
+
+const transfromData = (data) => {
+	let newData = {
+		id: data._id,
+		name: data.name,
+		email: data.email,
+		skills: data.skills,
+		gender: data.gender,
+		createdAt: data.createdAt,
+		designation: data.designation,
+		twitter: data.twitter,
+		instagram: data.instagram,
+		facebook: data.facebook,
+		linkedin: data.linkedin,
+		description: data.description,
+		profilePic: data.profilePic ? `${profileImageBasePath}/${data.profilePic}` : ""
+	}
+	return newData
+}
+
 class AuthController {
 
 	async login(req, res) {
@@ -59,6 +80,28 @@ class AuthController {
 			});
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error);
+		}
+	}
+
+	async getProfileProfile(req, res) {
+		try {
+			if (!req.payload._id) return Utilities.apiResponse(res, 422, "User id is required.")
+			const user = await User.findOne({ _id: req.payload._id })
+			const data = transfromData(user)
+			Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
+		} catch (error) {
+			Utilities.apiResponse(res, 500, error)
+		}
+	}
+
+	async updateProfile(req, res) {
+		try {
+			const doesExist = await User.findOne({ email: req.body.email })
+			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
+			await User.findOneAndUpdate({ _id: req.payload._id }, req.body)
+			Utilities.apiResponse(res, 200, 'Profile Has Been Updated Successfully')
+		} catch (error) {
+			Utilities.apiResponse(res, 500, error)
 		}
 	}
 }

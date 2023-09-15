@@ -35,6 +35,14 @@ Route.route('/api/v1/signup')
 	.post(AuthController.signup)
 	.all(Utilities.send405);
 
+Route.route('/api/v1/get-profile-details')
+	.get(Utilities.verifyAccessToken, AuthController.getProfileProfile)
+	.all(Utilities.send405);
+
+Route.route('/api/v1/update-profile')
+	.put(Utilities.verifyAccessToken, AuthController.updateProfile)
+	.all(Utilities.send405);
+
 Route.route('/api/v1/users/:userId?')
 	.post(CrudController.create)
 	.get(CrudController.read)
