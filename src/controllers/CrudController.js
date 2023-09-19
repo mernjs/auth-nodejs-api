@@ -5,7 +5,8 @@ const transfromData = (data) => {
 	let newData = {
 		_id: data._id,
 		name: data.name,
-		email: data.email
+		email: data.email,
+		mobile: data.mobile,
 	}
 	return newData
 }
@@ -20,7 +21,8 @@ class CrudController {
 			let data = {
 				_id: savedUser._id,
 				name: savedUser.name,
-				email: savedUser.email
+				email: savedUser.email,
+				mobile: savedUser.mobile,
 			}
 			Utilities.apiResponse(res, 200, 'User Created Successfully!', data)
 		} catch (error) {
