@@ -1,6 +1,14 @@
 const Utilities = require('../Utilities');
 const User = require('../models/User');
 
+const transfromData = (data) => {
+	let newData = {
+		_id: data._id,
+		name: data.name,
+		email: data.email
+	}
+	return newData
+}
 class CrudController {
 
 	async create(req, res) {
@@ -33,7 +41,18 @@ class CrudController {
 			} else {
 				users = await User.paginate({}, options)
 			}
-			Utilities.apiResponse(res, 200, 'Get Users Successfully', users)
+			let updatedUsers = []
+			users.docs.map(user => updatedUsers.push(transfromData(user)))
+			const data = {
+				users: updatedUsers,
+				pagination: {
+					"totalDocs": users.totalDocs,
+					"limit": users.limit,
+					"totalPages": users.totalPages,
+					"page": users.page,
+				}
+			}
+			Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
 		}
