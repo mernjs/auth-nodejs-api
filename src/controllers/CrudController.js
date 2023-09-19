@@ -73,7 +73,7 @@ class CrudController {
 
 	async delete(req, res) {
 		try {
-			await User.find({ _id: req.body.user_id }).remove().exec();
+			await User.find({ _id: req.params.userId }).remove().exec();
 			Utilities.apiResponse(res, 200, 'User Deleted Successfully')
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
