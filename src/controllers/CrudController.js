@@ -40,21 +40,24 @@ class CrudController {
 			let users = []
 			if (req.params.userId) {
 				users = await User.findOne({ _id: req.params.userId })
+				const data = transfromData(users)
+				return Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
 			} else {
 				users = await User.paginate({}, options)
-			}
-			let updatedUsers = []
-			users.docs.map(user => updatedUsers.push(transfromData(user)))
-			const data = {
-				users: updatedUsers,
-				pagination: {
-					"totalDocs": users.totalDocs,
-					"limit": users.limit,
-					"totalPages": users.totalPages,
-					"page": users.page,
+				let updatedUsers = []
+				users.docs.map(user => updatedUsers.push(transfromData(user)))
+				const data = {
+					users: updatedUsers,
+					pagination: {
+						"totalDocs": users.totalDocs,
+						"limit": users.limit,
+						"totalPages": users.totalPages,
+						"page": users.page,
+					}
 				}
+				return Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
 			}
-			Utilities.apiResponse(res, 200, 'Get Users Successfully', data)
+
 		} catch (error) {
 			Utilities.apiResponse(res, 500, error)
 		}
