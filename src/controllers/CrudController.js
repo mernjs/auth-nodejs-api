@@ -7,6 +7,7 @@ const transfromData = (data) => {
 		name: data.name,
 		email: data.email,
 		mobile: data.mobile,
+		password: data.password,
 	}
 	return newData
 }
@@ -65,8 +66,8 @@ class CrudController {
 
 	async update(req, res) {
 		try {
-			const doesExist = await User.findOne({ email: req.body.email })
-			if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
+			// const doesExist = await User.findOne({ email: req.body.email })
+			// if (doesExist) return Utilities.apiResponse(res, 422, 'Email is already been registered')
 			await User.findOneAndUpdate({ _id: req.body.user_id }, req.body)
 			Utilities.apiResponse(res, 200, 'User Has Been Updated Successfully')
 		} catch (error) {
